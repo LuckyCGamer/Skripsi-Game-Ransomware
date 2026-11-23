@@ -63,10 +63,10 @@ public class Chapter1Controller : MonoBehaviour
     [Header("Software")]
     [Tooltip("Prefab ui_sofware, dibuat satu per perangkat lunak dan disusun ke bawah")]
     [SerializeField] SoftwareEntryView softwareEntryPrefab;
-    [Tooltip("Tempat entri perangkat lunak dibuat (ui_scenario_software)")]
+    [Tooltip("Tempat entri perangkat lunak dibuat (software_list). VerticalLayoutGroup di objek ini " +
+             "menyusun entri sehingga tidak bertumpuk saat ukuran layar berubah.")]
     [SerializeField] RectTransform softwareContainer;
     [SerializeField] Button scanButton;
-    [SerializeField] float softwareEntrySpacing = 4f;
     [SerializeField] Color markerUnknown = new Color(0.7f, 0.7f, 0.7f);
     [SerializeField] Color markerGreen = new Color(0.3f, 0.85f, 0.3f);
     [SerializeField] Color markerYellow = new Color(1f, 0.82f, 0.3f);
@@ -139,9 +139,10 @@ public class Chapter1Controller : MonoBehaviour
 
     void BuildInbox()
     {
-        // Hapus item contoh yang mungkin masih ada di scene.
+        // Sembunyikan item contoh yang ada di scene (tidak di-Destroy supaya Inspector
+        // yang sedang menampilkannya tidak error MissingReferenceException).
         foreach (Transform child in inboxContainer)
-            if (child.GetComponent<EmailInboxItem>()) Destroy(child.gameObject);
+            if (child.GetComponent<EmailInboxItem>()) child.gameObject.SetActive(false);
 
         for (int i = 0; i < scenario.emails.Length; i++)
         {
@@ -156,15 +157,13 @@ public class Chapter1Controller : MonoBehaviour
     void BuildSoftwareList()
     {
         foreach (Transform child in softwareContainer)
-            if (child.GetComponent<SoftwareEntryView>()) Destroy(child.gameObject);
+            if (child.GetComponent<SoftwareEntryView>()) child.gameObject.SetActive(false);
 
-        Vector2 start = ((RectTransform)softwareEntryPrefab.transform).anchoredPosition;
+        // Posisi dan ukuran entri diatur oleh VerticalLayoutGroup pada softwareContainer.
         for (int i = 0; i < scenario.software.Length; i++)
         {
             var e = Instantiate(softwareEntryPrefab, softwareContainer);
             e.name = "software_entry_" + (i + 1);
-            float step = e.Rect.rect.height + softwareEntrySpacing;
-            e.Rect.anchoredPosition = start - new Vector2(0f, step * i);
 
             int idx = i;
             e.updateButton.onClick.AddListener(() => UpdateSoftware(idx));
@@ -172,7 +171,6 @@ public class Chapter1Controller : MonoBehaviour
             e.flagButton.onClick.AddListener(() => ToggleFlag(idx));
             softwareEntries.Add(e);
         }
-        scanButton.transform.SetAsLastSibling();
     }
 
     /// <summary>Mulai (ulang) investigasi dari awal Chapter 1 dengan variasi yang sama.</summary>

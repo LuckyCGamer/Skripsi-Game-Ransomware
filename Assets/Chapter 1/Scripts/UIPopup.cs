@@ -33,21 +33,23 @@ public class UIPopup : MonoBehaviour
         titleText.text = title;
         bodyText.text = body;
 
-        foreach (var b in spawned) Destroy(b.gameObject);
-        spawned.Clear();
-        if (options != null)
+        // Tombol opsi dipakai ulang (bukan di-Destroy) supaya Inspector tidak menunjuk objek yang sudah hilang.
+        int count = options?.Count ?? 0;
+        while (spawned.Count < count)
+            spawned.Add(Instantiate(optionTemplate, optionContainer));
+        for (int i = 0; i < spawned.Count; i++)
         {
-            foreach (var opt in options)
-            {
-                var b = Instantiate(optionTemplate, optionContainer);
-                b.gameObject.SetActive(true);
-                b.GetComponentInChildren<TMP_Text>().text = opt.Key;
-                var cb = opt.Value;
-                b.onClick.AddListener(() => { Hide(); cb?.Invoke(); });
-                spawned.Add(b);
-            }
+            var b = spawned[i];
+            bool used = i < count;
+            b.gameObject.SetActive(used);
+            b.onClick.RemoveAllListeners();
+            if (!used) continue;
+            var opt = options[i];
+            b.GetComponentInChildren<TMP_Text>().text = opt.Key;
+            var cb = opt.Value;
+            b.onClick.AddListener(() => { Hide(); cb?.Invoke(); });
         }
-        optionContainer.gameObject.SetActive(spawned.Count > 0);
+        optionContainer.gameObject.SetActive(count > 0);
 
         primaryButton.gameObject.SetActive(!string.IsNullOrEmpty(primary));
         primaryLabel.text = primary;

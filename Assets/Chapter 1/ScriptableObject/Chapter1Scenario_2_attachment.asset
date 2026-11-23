@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc5b3dd5c3608f4eafb61872ec82382, type: 3}
+  m_Name: Chapter1Scenario_2_attachment
+  m_EditorClassIdentifier: Assembly-CSharp::Chapter1.Chapter1Scenario
+  id: attachment
+  incidentReport: 'Sistem PT Maju Jaya telah dimasuki peretas.
+
+
+    Antivirus di komputer staf HRD mendeteksi program asing <b>svchost32.exe</b> yang berjalan dari folder Downloads dan mengirim data ke server luar, sesaat setelah staf tersebut membuka sebuah berkas lamaran kerja.
+
+
+    Periksa email, tautan, dan perangkat lunak perusahaan untuk menemukan cara peretas masuk.'
+  correctMethod: 0
+  failHint: Program asing berjalan dari folder Downloads setelah sebuah berkas dibuka. Periksa kembali lampiran email, terutama ekstensi berkas dan permintaan untuk menekan "Enable Content".
+  emails:
+  - senderName: Andi Pratama
+    senderAddress: andi.pratama.cv@gmail.com
+    subject: Lamaran Kerja - Staf Administrasi
+    body: 'Selamat siang Bapak/Ibu HRD,
+
+
+      Bersama email ini saya lampirkan CV saya. Jika dokumen tidak tampil dengan benar, mohon klik "Enable Content" terlebih dahulu.
+
+
+      Hormat saya,
+
+      Andi'
+    attachmentName: CV_Andi_Pratama.docm
+    attachmentSize: 1,4 MB
+    malicious: 1
+    reason: Berkas .docm berisi makro, dan pengirim meminta "Enable Content" agar makro berbahaya berjalan.
+  - senderName: Sari (Marketing)
+    senderAddress: sari@ptmaju.co.id
+    subject: Materi Presentasi Klien
+    body: Hai, ini materi presentasi untuk klien besok. Tolong dicek ya.
+    attachmentName: Presentasi_Klien.pptx
+    attachmentSize: 5,2 MB
+    malicious: 0
+    reason: Pengirim internal dan lampiran presentasi biasa.
+  - senderName: Bank Mandiri
+    senderAddress: info@bankmandiri-secure.com
+    subject: Pembaruan Data Nasabah
+    body: Nasabah yang terhormat, data Anda harus diperbarui hari ini. Ekstrak dan jalankan formulir terlampir.
+    attachmentName: Formulir_Update.zip
+    attachmentSize: 820 KB
+    malicious: 1
+    reason: Domain palsu yang meniru bank dan meminta menjalankan isi arsip .zip.
+  - senderName: Direktur Utama
+    senderAddress: direktur@ptmaju.co.id
+    subject: Pengumuman Libur Nasional
+    body: Diberitahukan bahwa kantor libur pada tanggal merah minggu depan. Selamat berlibur.
+    attachmentName: 
+    attachmentSize: 
+    malicious: 0
+    reason: Pengirim internal tanpa lampiran dan tanpa permintaan mencurigakan.
+  links:
+  - displayText: http://promo-voucher-gratis.xyz/claim
+    targetUrl: http://promo-voucher-gratis.xyz/claim
+    safe: 0
+    reason: 'Alamatnya terlihat langsung: domain .xyz tidak dikenal dengan iming-iming hadiah dan tanpa HTTPS.'
+    shortLinkDestination: 
+    shortLinkPageTitle: 
+    shortLinkCreated: 
+    shortLinkClicks: 0
+  - displayText: Formulir rekrutmen resmi
+    targetUrl: https://bit.ly/4KrJmFm
+    safe: 1
+    reason: Tautan pendek bit.ly; pratinjau bit.ly/4KrJmFm+ menunjukkan tujuan karir.ptmaju.co.id, subdomain resmi dengan HTTPS.
+    shortLinkDestination: https://karir.ptmaju.co.id/formulir
+    shortLinkPageTitle: Karir PT Maju Jaya - Formulir Lamaran
+    shortLinkCreated: 2 bulan yang lalu
+    shortLinkClicks: 342
+  - displayText: Login internet banking
+    targetUrl: http://bankmandiri-secure.com.verify-login.info
+    safe: 0
+    reason: Saat di-hover, domain sebenarnya verify-login.info; nama bank hanya dipasang di depannya.
+    shortLinkDestination: 
+    shortLinkPageTitle: 
+    shortLinkCreated: 
+    shortLinkClicks: 0
+  software:
+  - name: Adobe Acrobat Reader
+    installedVersion: 2023.001
+    latestVersion: 2024.002
+    description: Pembaca PDF. Tersedia pembaruan.
+    status: 1
+  - name: Windows Defender
+    installedVersion: 4.18.24
+    latestVersion: 4.18.24
+    description: Antivirus. Definisi virus sudah terbaru.
+    status: 0
+  - name: Microsoft Office 2016
+    installedVersion: 16.0.4266
+    latestVersion: 16.0.17
+    description: Makro VBA aktif otomatis untuk semua dokumen dan versi tidak lagi didukung.
+    status: 2
+  - name: Zoom
+    installedVersion: 6.0.2
+    latestVersion: 6.0.2
+    description: Aplikasi rapat daring. Versi sudah terbaru.
+    status: 0

@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc5b3dd5c3608f4eafb61872ec82382, type: 3}
+  m_Name: Chapter1Scenario_1_phishing
+  m_EditorClassIdentifier: Assembly-CSharp::Chapter1.Chapter1Scenario
+  id: phishing
+  incidentReport: 'Sistem PT Maju Jaya telah dimasuki peretas.
+
+
+    Log server mencatat login yang <b>sah</b> menggunakan akun staf keuangan (Rina) pada pukul 02.13 dari alamat IP luar negeri. Tidak ditemukan program asing di komputer Rina.
+
+
+    Periksa email, tautan, dan perangkat lunak perusahaan untuk menemukan cara peretas masuk.'
+  correctMethod: 1
+  failHint: Peretas login memakai akun karyawan yang sah, artinya kata sandi karyawan bocor. Telusuri kembali email yang meminta verifikasi akun dan ke mana tautannya benar-benar mengarah.
+  emails:
+  - senderName: Tim IT Support
+    senderAddress: it-support@ptmaju-helpdesk.com
+    subject: Verifikasi Akun Email Anda Segera
+    body: 'Yth. Karyawan,
+
+
+      Akun email Anda akan DINONAKTIFKAN dalam 24 jam karena aktivitas tidak biasa. Segera lakukan verifikasi melalui tautan "Verifikasi akun email kantor" dan masukkan kata sandi Anda.
+
+
+      Salam,
+
+      Tim IT'
+    attachmentName: 
+    attachmentSize: 
+    malicious: 1
+    reason: Domain pengirim bukan ptmaju.co.id, bernada mendesak, dan meminta kata sandi.
+  - senderName: Budi Santoso (HRD)
+    senderAddress: budi.santoso@ptmaju.co.id
+    subject: Jadwal Rapat Bulanan
+    body: 'Halo semua,
+
+
+      Terlampir jadwal rapat bulanan divisi. Mohon hadir tepat waktu.
+
+
+      Terima kasih,
+
+      Budi'
+    attachmentName: Jadwal_Rapat_Juni.pdf
+    attachmentSize: 128 KB
+    malicious: 0
+    reason: Pengirim dari domain resmi dan lampiran PDF biasa.
+  - senderName: DHL Express
+    senderAddress: notification@dhl-paket-delivery.net
+    subject: Paket Anda Tertahan di Gudang
+    body: Paket Anda tidak dapat dikirim karena alamat tidak lengkap. Buka resi terlampir untuk memperbarui alamat pengiriman.
+    attachmentName: Resi_Pengiriman.pdf.exe
+    attachmentSize: 2,1 MB
+    malicious: 1
+    reason: Lampiran berekstensi ganda .pdf.exe, yaitu program yang menyamar sebagai dokumen.
+  - senderName: Finance Dept
+    senderAddress: finance@ptmaju.co.id
+    subject: Laporan Keuangan Q2
+    body: Berikut laporan keuangan kuartal kedua untuk ditinjau sebelum rapat direksi.
+    attachmentName: Laporan_Q2.xlsx
+    attachmentSize: 340 KB
+    malicious: 0
+    reason: Pengirim internal dan lampiran spreadsheet tanpa makro.
+  links:
+  - displayText: Verifikasi akun email kantor
+    targetUrl: http://ptmaju-co-id.login-verify.ru/owa
+    safe: 0
+    reason: Saat di-hover, domain tujuannya login-verify.ru yang meniru nama perusahaan, bukan ptmaju.co.id.
+    shortLinkDestination: 
+    shortLinkPageTitle: 
+    shortLinkCreated: 
+    shortLinkClicks: 0
+  - displayText: https://hr.ptmaju.co.id/slip-gaji
+    targetUrl: https://hr.ptmaju.co.id/slip-gaji
+    safe: 1
+    reason: 'Alamatnya terlihat langsung: subdomain resmi ptmaju.co.id dengan HTTPS.'
+    shortLinkDestination: 
+    shortLinkPageTitle: 
+    shortLinkCreated: 
+    shortLinkClicks: 0
+  - displayText: Lacak paket DHL Anda
+    targetUrl: https://bit.ly/3Dhl8Px
+    safe: 0
+    reason: Tautan pendek bit.ly; pratinjau bit.ly/3Dhl8Px+ menunjukkan tujuan dhl-paket-delivery.net, bukan domain resmi DHL dan tanpa HTTPS.
+    shortLinkDestination: http://dhl-paket-delivery.net/track?id=88231
+    shortLinkPageTitle: DHL Tracking - Update Alamat
+    shortLinkCreated: 3 hari yang lalu
+    shortLinkClicks: 1287
+  software:
+  - name: Microsoft Office
+    installedVersion: 16.0.17
+    latestVersion: 16.0.17
+    description: Aplikasi perkantoran. Versi sudah terbaru.
+    status: 0
+  - name: Google Chrome
+    installedVersion: 124.0
+    latestVersion: 126.0
+    description: Browser. Tersedia pembaruan keamanan rutin.
+    status: 1
+  - name: Apache HTTP Server
+    installedVersion: 2.4.49
+    latestVersion: 2.4.62
+    description: 'CVE-2021-41773: path traversal yang memungkinkan eksekusi kode dari jarak jauh.'
+    status: 2
+  - name: 7-Zip
+    installedVersion: 24.07
+    latestVersion: 24.07
+    description: Aplikasi kompresi berkas. Versi sudah terbaru.
+    status: 0

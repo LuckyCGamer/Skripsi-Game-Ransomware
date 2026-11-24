@@ -522,11 +522,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_AnchorMin.x
@@ -538,11 +538,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -29.9126
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_SizeDelta.y
-      value: -327.50348
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -574,11 +574,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 151
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9029508859609928483, guid: e9f00d22cf388b1448328b9c428b232d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1900,8 +1900,8 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 800, y: 450}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96

@@ -169,3 +169,6 @@ Packages/packages-lock.json linguist-generated
 
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
+
+# Small UI sprite kept out of LFS so it works on machines without Git LFS
+"Assets/Chapter 1/sprite/ui_circle.png" -filter -diff -merge -text

@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 223eae63a92467d4ba9e18e54cb69fd9, type: 3}
+  m_Name: Chapter2BackupStrategy_3_server_email
+  m_EditorClassIdentifier: Assembly-CSharp::Chapter2.Chapter2BackupStrategy
+  displayName: Server Email
+  description: Arsip email karyawan dan perusahaan.
+  sizeGB: 120
+  isImportant: 1
+  reason: email berisi komunikasi dan bukti kerja yang dibutuhkan setiap hari.
+  frequencyOptions:
+  - label: Tidak Dicadangkan
+    isBackup: 0
+    storageMultiplier: 0
+    dataLossHours: 0
+    points: 0
+    description: Berkas ini tidak dapat dipulihkan dari cadangan.
+  - label: Setiap 4 Jam
+    isBackup: 1
+    storageMultiplier: 2
+    dataLossHours: 4
+    points: 25
+    description: Data hilang lebih sedikit, storage lebih besar.
+  - label: Setiap 24 Jam
+    isBackup: 1
+    storageMultiplier: 1
+    dataLossHours: 24
+    points: 10
+    description: Storage lebih kecil, data hilang lebih banyak.
+  storageOptions:
+  - label: Lokasi Sama
+    isOffsite: 0
+    cost: 500000
+    points: 5
+    description: Lebih murah, tetapi cadangan rawan ikut terenkripsi.
+  - label: Offsite
+    isOffsite: 1
+    cost: 1500000
+    points: 20
+    description: Lebih mahal, tetapi cadangan lebih aman.

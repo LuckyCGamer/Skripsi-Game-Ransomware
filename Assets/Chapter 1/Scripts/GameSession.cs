@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +11,21 @@ public static class GameSession
     public static int Chapter1Score = -1;
     public static string Chapter1Summary = "";
     public static int Chapter1Variation = -1;
+
+    /// <summary>Keputusan pencadangan satu berkas/sistem, dasar pemulihan pada Chapter 3.</summary>
+    public class BackupRecord
+    {
+        public string fileName;
+        public bool isBackedUp;
+        public int dataLossHours;
+        public bool isOffsite;
+    }
+
+    public static int Chapter2Score = -1;
+    public static string Chapter2Summary = "";
+    public static bool Chapter2HasDisasterRecovery;
+    public static bool Chapter2HasIncidentResponse;
+    public static readonly List<BackupRecord> Chapter2Backups = new List<BackupRecord>();
 
     /// <summary>Pilih variasi acak yang berbeda dari variasi permainan sebelumnya.</summary>
     public static int PickChapter1Variation(int count)

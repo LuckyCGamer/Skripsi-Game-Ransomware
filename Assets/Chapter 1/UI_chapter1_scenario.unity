@@ -2003,7 +2003,7 @@ MonoBehaviour:
   entryFlaggedColor: {r: 1, g: 0.85, b: 0.85, a: 1}
   database: {fileID: 11400000, guid: 09616032568f65341ba560a8f5fd3cdd, type: 2}
   popup: {fileID: 1988433664}
-  nextSceneName: Chapter 2
+  nextSceneName: UI_chapter2_scenario
   forceVariation: -1
 --- !u!1 &657162263
 GameObject:

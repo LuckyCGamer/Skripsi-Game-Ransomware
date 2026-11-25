@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8678a7029b28e544c9033275ccc88410, type: 3}
+  m_Name: Chapter3Database
+  m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3Database
+  introduction: 'Serangan ransomware terjadi di PT Maju Jaya! Beberapa sistem menampilkan pesan tebusan dan berkasnya terenkripsi.
+
+
+    Isolasi sistem yang terinfeksi di tab <b>File</b>, lindungi server cadangan di tab <b>Backup Protection</b>, lalu pulihkan data melalui tombol <b>Backups</b>. Setiap tindakan memakai satu IT Staff dan dapat dipantau di tab <b>Activity</b>.
+
+
+    Cadangan di lokasi yang sama dapat ikut terenkripsi jika serangan tidak segera dikendalikan. Hasil pemulihan bergantung pada keputusanmu di Chapter 2.'
+  responseOptions:
+  - label: Membayar tebusan agar data cepat kembali
+    activatesIncidentResponse: 0
+    feedback: Membayar tebusan tidak menjamin data kembali dan mendorong serangan berikutnya. Waktu terbuang dan penanganan berjalan tanpa rencana.
+  - label: Mengaktifkan rencana Incident Response (IR)
+    activatesIncidentResponse: 1
+    feedback: Tim bergerak sesuai rencana. Sistem yang terinfeksi kini ditandai di tab File.
+  - label: Menyalakan ulang semua komputer
+    activatesIncidentResponse: 0
+    feedback: Menyalakan ulang tidak menghentikan enkripsi dan dapat menghilangkan bukti. Penanganan berjalan tanpa rencana.
+  - label: Menunggu sampai serangan berhenti sendiri
+    activatesIncidentResponse: 0
+    feedback: Ransomware terus menyebar selama tidak ditangani. Penanganan berjalan tanpa rencana.
+  systems:
+  - {fileID: 11400000, guid: a8bd7b9476a72c0458262fb6e60bfb1c, type: 2}
+  - {fileID: 11400000, guid: a9921ba8a2c66624f97bf0bae15dca61, type: 2}
+  - {fileID: 11400000, guid: af1769436c12cb84a8e36840760ccab9, type: 2}
+  - {fileID: 11400000, guid: 7f4702fa470c9b444852e357c3704da0, type: 2}
+  backupServers:
+  - {fileID: 11400000, guid: 4c59da0337102b84aba7af884a95bd25, type: 2}
+  - {fileID: 11400000, guid: 75f3bea0d63f30843b843ea648cf7716, type: 2}
+  startHour: 8
+  minutesPerSecond: 1
+  localBackupEncryptMinutes: 120
+  staffCount: 5
+  maxContractors: 2
+  contractorCost: 1000000
+  isolateSeconds: 4
+  reconnectSeconds: 3
+  investigateSeconds: 3
+  verifySeconds: 4
+  restoreSeconds: 8
+  lossPerHour: 2000000

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4832db2ca04e65488d82e637760d3d5, type: 3}
+  m_Name: Chapter3System_1_database_pelanggan
+  m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3System
+  displayName: Database Pelanggan
+  description: Data pelanggan dan riwayat transaksi perusahaan.
+  symptom: Berkas berubah menjadi .locked dan muncul pesan tebusan.
+  backupSource: {fileID: 11400000, guid: 8e94b041db7c0284cad51ae3040b6617, type: 2}
+  isInfected: 1
+  priority: 1
+  reason: seluruh layanan pelanggan bergantung pada sistem ini.
+  lossIfFailed: 50000000

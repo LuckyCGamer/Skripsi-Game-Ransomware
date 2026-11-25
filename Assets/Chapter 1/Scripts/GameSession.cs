@@ -25,7 +25,27 @@ public static class GameSession
     public static string Chapter2Summary = "";
     public static bool Chapter2HasDisasterRecovery;
     public static bool Chapter2HasIncidentResponse;
+    /// <summary>Sisa uang Chapter 2, dipakai untuk menyewa kontraktor pada Chapter 3.</summary>
+    public static int Chapter2MoneyLeft;
     public static readonly List<BackupRecord> Chapter2Backups = new List<BackupRecord>();
+
+    public static int Chapter3Score = -1;
+    public static string Chapter3Summary = "";
+
+    /// <summary>Skor total ketiga chapter (maks. 300). Chapter yang belum dimainkan dihitung 0.</summary>
+    public static int TotalScore =>
+        Mathf.Max(0, Chapter1Score) + Mathf.Max(0, Chapter2Score) + Mathf.Max(0, Chapter3Score);
+
+    /// <summary>Hapus hasil permainan sebelum memulai permainan baru.</summary>
+    public static void Reset()
+    {
+        Chapter1Score = Chapter2Score = Chapter3Score = -1;
+        Chapter1Summary = Chapter2Summary = Chapter3Summary = "";
+        Chapter1Variation = -1;
+        Chapter2HasDisasterRecovery = Chapter2HasIncidentResponse = false;
+        Chapter2MoneyLeft = 0;
+        Chapter2Backups.Clear();
+    }
 
     /// <summary>Pilih variasi acak yang berbeda dari variasi permainan sebelumnya.</summary>
     public static int PickChapter1Variation(int count)

@@ -14,6 +14,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Chapter 2/UI_chapter2_scenario.unity
     guid: 126884d20e2c915499d94e0d5cb58e66
+  - enabled: 1
+    path: Assets/Chapter 3/UI_chapter3_scenario.unity
+    guid: 8b411f3f53f0d5b4bbd0ceabfd40853a
+  - enabled: 1
+    path: Assets/Final Result/UI_final_result.unity
+    guid: 453f0d2c74fc36641b503086267778ab
+  - enabled: 1
+    path: Assets/Main Menu/Scenes/StartScreen.unity
+    guid: 26c7dd5d409f6fa43b4a2a38aed8de1f
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

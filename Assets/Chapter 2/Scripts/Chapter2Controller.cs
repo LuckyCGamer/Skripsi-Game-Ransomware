@@ -185,6 +185,7 @@ namespace Chapter2
             GameSession.Chapter2Summary = summary;
             GameSession.Chapter2HasDisasterRecovery = game.HasDisasterRecovery;
             GameSession.Chapter2HasIncidentResponse = game.HasIncidentResponse;
+            GameSession.Chapter2MoneyLeft = game.Money;
             GameSession.Chapter2Backups.Clear();
             foreach (var c in game.Choices)
                 GameSession.Chapter2Backups.Add(new GameSession.BackupRecord

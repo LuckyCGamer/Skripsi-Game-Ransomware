@@ -75,7 +75,7 @@ namespace Chapter2
             costText.text = choice.IsBackedUp && choice.storage == null || choice.frequency == null
                 ? "-" : Chapter2Controller.Rupiah(choice.Cost);
             dataLossText.text = choice.frequency == null ? "-"
-                : choice.IsBackedUp ? $"Maks. {choice.frequency.dataLossHours} jam" : "Semua data";
+                : choice.IsBackedUp ? $"Maks. {choice.frequency.intervalHours} jam" : "Semua data";
         }
 
         void Highlight(Button button, bool selected) =>

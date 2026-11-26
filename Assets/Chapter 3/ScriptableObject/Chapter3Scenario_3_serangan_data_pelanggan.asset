@@ -15,4 +15,10 @@ MonoBehaviour:
   attackDescription: Serangan ransomware terjadi di PT Maju Jaya! Pelanggan melaporkan bahwa layanan tidak dapat diakses, dan karyawan tidak dapat membuka email kantor.
   infectedSystems:
   - {fileID: 11400000, guid: a8bd7b9476a72c0458262fb6e60bfb1c, type: 2}
-  - {fileID: 11400000, guid: af1769436c12cb84a8e36840760ccab9, type: 2}
+  spread:
+  - system: {fileID: 11400000, guid: af1769436c12cb84a8e36840760ccab9, type: 2}
+    minute: 30
+  - system: {fileID: 11400000, guid: a9921ba8a2c66624f97bf0bae15dca61, type: 2}
+    minute: 55
+  - system: {fileID: 11400000, guid: 7f4702fa470c9b444852e357c3704da0, type: 2}
+    minute: 85

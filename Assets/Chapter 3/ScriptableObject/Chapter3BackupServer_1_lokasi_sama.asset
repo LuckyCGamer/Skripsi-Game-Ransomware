@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c8710678e4bebb4eb17e2cc3dffd678, type: 3}
   m_Name: Chapter3BackupServer_1_lokasi_sama
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3BackupServer
-  displayName: Server Cadangan Lokasi Sama
-  description: Satu jaringan dengan kantor. Rawan ikut terenkripsi selama serangan belum terkendali.
-  isOffsite: 0
+  displayName: Penyimpanan Cadangan Terhubung
+  description: Terpasang di jaringan produksi. Terjangkau ransomware sekitar 40 menit setelah serangan dimulai.
+  location: 0
+  encryptMinute: 40
+  restoreExtraSeconds: 0

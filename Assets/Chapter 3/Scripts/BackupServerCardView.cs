@@ -20,8 +20,8 @@ namespace Chapter3
 
         public void Refresh(ServerState s)
         {
-            statusText.text = s.encrypted ? "TERENKRIPSI" : s.isolated ? "TERISOLASI" : "TERHUBUNG";
-            isolateButton.interactable = !s.isolated && !s.busy;
+            statusText.text = s.IsOffline ? "OFFLINE" : s.encrypted ? "TERENKRIPSI" : s.isolated ? "TERISOLASI" : "TERHUBUNG";
+            isolateButton.interactable = !s.IsOffline && !s.encrypted && !s.isolated && !s.busy;
         }
     }
 }

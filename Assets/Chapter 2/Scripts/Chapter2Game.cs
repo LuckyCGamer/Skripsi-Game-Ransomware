@@ -5,11 +5,12 @@ using UnityEngine;
 
 namespace Chapter2
 {
-    public enum FrequencyResult
+    public enum ChoiceResult
     {
         Accepted,
         NeedStorage, // storage kurang, uang cukup untuk menambah storage
         NoBudget,    // storage kurang dan uang juga kurang (-5 poin)
+        NoMoney,     // uang tidak cukup untuk biaya lokasi penyimpanan
     }
 
     /// <summary>Keputusan pemain untuk satu berkas/sistem. null = belum dipilih.</summary>
@@ -20,17 +21,19 @@ namespace Chapter2
         public StorageOption storage;
 
         public bool IsBackedUp => frequency != null && frequency.isBackup;
-        public int StorageNeeded => StorageFor(frequency);
+        public int StorageNeeded => StorageFor(frequency, storage);
         public int Cost => IsBackedUp && storage != null ? storage.cost : 0;
 
-        public int StorageFor(FrequencyOption option) =>
-            option != null && option.isBackup ? Mathf.CeilToInt(file.sizeGB * option.storageMultiplier) : 0;
+        /// <summary>Ukuran data x pengali frekuensi x jumlah salinan.</summary>
+        public int StorageFor(FrequencyOption f, StorageOption s) =>
+            f != null && f.isBackup ? Mathf.CeilToInt(file.sizeGB * f.storageMultiplier * (s != null ? s.Copies : 1)) : 0;
     }
 
     /// <summary>
     /// Aturan Chapter 2 (Gambar 3.8), tanpa UI:
     ///   Pilih berkas/sistem penting (+30), frekuensi (4 jam +25 / 24 jam +10), pemilihan selesai (+15),
-    ///   lokasi (offsite +20 / sama +5), DR dan IR (+10). Storage dan uang tidak cukup: -5.
+    ///   lokasi (berbeda/offsite +20 / terhubung +5), DR dan IR (+10). Storage dan uang tidak cukup: -5.
+    /// Item kesiapan (pelatihan, monitoring, infrastruktur DR) tidak memberi poin, tetapi membantu pada Chapter 3.
     /// </summary>
     public class Chapter2Game
     {
@@ -48,6 +51,10 @@ namespace Chapter2
         public int StorageTotal { get; private set; }
         public bool HasDisasterRecovery { get; private set; }
         public bool HasIncidentResponse { get; private set; }
+        public bool HasTraining { get; private set; }
+        /// <summary>Menit sampai serangan terdeteksi; -1 = tanpa monitoring.</summary>
+        public int DetectMinutes { get; private set; } = -1;
+        public float RestoreMultiplier { get; private set; } = 1f;
 
         public int StorageUsed => Choices.Sum(c => c.StorageNeeded);
         public int StorageFree => StorageTotal - StorageUsed;
@@ -62,28 +69,35 @@ namespace Chapter2
         }
 
         // ------------------------------------------------------------------ Backup Strategy
-        public FrequencyResult SetFrequency(BackupChoice choice, FrequencyOption option, out int missingGB)
+        public ChoiceResult SetFrequency(BackupChoice choice, FrequencyOption option, out int missingGB)
         {
-            int extra = choice.StorageFor(option) - choice.StorageNeeded;
-            missingGB = extra - StorageFree;
-            if (extra > 0 && missingGB > 0)
-            {
-                if (CanAffordStorage(missingGB)) return FrequencyResult.NeedStorage;
-                noBudgetCount++;
-                return FrequencyResult.NoBudget;
-            }
-
-            choice.frequency = option;
-            if (!option.isBackup) choice.storage = null;
-            return FrequencyResult.Accepted;
+            var storage = option.isBackup ? choice.storage : null;
+            return Apply(choice, option, storage, out missingGB);
         }
 
-        /// <summary>false jika uang tidak cukup untuk lokasi tersebut.</summary>
-        public bool SetStorage(BackupChoice choice, StorageOption option)
+        public ChoiceResult SetStorage(BackupChoice choice, StorageOption option, out int missingGB)
         {
-            if (!choice.IsBackedUp || option.cost - choice.Cost > Money) return false;
-            choice.storage = option;
-            return true;
+            missingGB = 0;
+            if (!choice.IsBackedUp) return ChoiceResult.Accepted;
+            return Apply(choice, choice.frequency, option, out missingGB);
+        }
+
+        ChoiceResult Apply(BackupChoice choice, FrequencyOption f, StorageOption s, out int missingGB)
+        {
+            int extraGB = choice.StorageFor(f, s) - choice.StorageNeeded;
+            missingGB = extraGB - StorageFree;
+            if (extraGB > 0 && missingGB > 0)
+            {
+                if (CanAffordStorage(missingGB)) return ChoiceResult.NeedStorage;
+                noBudgetCount++;
+                return ChoiceResult.NoBudget;
+            }
+            int newCost = f != null && f.isBackup && s != null ? s.cost : 0;
+            if (newCost - choice.Cost > Money) return ChoiceResult.NoMoney;
+
+            choice.frequency = f;
+            choice.storage = s;
+            return ChoiceResult.Accepted;
         }
 
         /// <summary>Apakah sisa uang cukup untuk membeli tambahan storage sebesar ini (boleh beberapa item).</summary>
@@ -111,11 +125,17 @@ namespace Chapter2
         {
             if (!CanBuy(item)) return false;
             spentOnItems += item.price;
+            if (item.effect != ShopItemEffect.AddStorage) owned.Add(item); // selain storage hanya dibeli sekali
             switch (item.effect)
             {
                 case ShopItemEffect.AddStorage: StorageTotal += item.storageGB; break;
-                case ShopItemEffect.DisasterRecovery: HasDisasterRecovery = true; owned.Add(item); break;
-                case ShopItemEffect.IncidentResponse: HasIncidentResponse = true; owned.Add(item); break;
+                case ShopItemEffect.DisasterRecovery: HasDisasterRecovery = true; break;
+                case ShopItemEffect.IncidentResponse: HasIncidentResponse = true; break;
+                case ShopItemEffect.Training: HasTraining = true; break;
+                case ShopItemEffect.Monitoring:
+                    DetectMinutes = DetectMinutes < 0 ? item.detectMinutes : Mathf.Min(DetectMinutes, item.detectMinutes);
+                    break;
+                case ShopItemEffect.RecoverySite: RestoreMultiplier = Mathf.Min(RestoreMultiplier, item.restoreMultiplier); break;
             }
             return true;
         }
@@ -169,6 +189,12 @@ namespace Chapter2
             s.Append($"5. Rencana DR dan IR: {plan}/{PlanPoints}\n");
             if (plan == 0)
                 s.Append($"   - Belum disiapkan: {string.Join(" dan ", MissingPlans())}.\n");
+
+            var extras = new List<string>();
+            if (HasTraining) extras.Add("pelatihan IR");
+            if (DetectMinutes >= 0) extras.Add($"monitoring (deteksi ~{DetectMinutes} menit)");
+            if (RestoreMultiplier < 1f) extras.Add("infrastruktur DR");
+            if (extras.Count > 0) s.Append($"\nKesiapan tambahan untuk Chapter 3: {string.Join(", ", extras)}.\n");
 
             int penalty = noBudgetCount * NoBudgetPenalty;
             if (penalty > 0) s.Append($"\nPengurangan ({noBudgetCount}x anggaran tidak cukup): -{penalty}\n");

@@ -366,6 +366,7 @@ GameObject:
   - component: {fileID: 127675607}
   - component: {fileID: 127675609}
   - component: {fileID: 127675608}
+  - component: {fileID: 127675610}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -417,7 +418,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 84, y: 108}
+  m_CellSize: {x: 113, y: 108}
   m_Spacing: {x: 8, y: 10}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -435,6 +436,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &127675610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127675606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f84f6e397f4e147b10990db8bdd98c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Chapter2.FillGridWidth
+  minCellWidth: 100
 --- !u!1 &132055979
 GameObject:
   m_ObjectHideFlags: 0
@@ -3883,7 +3897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+  m_Color: {r: 0.82, g: 0.82, b: 0.82, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7138,7 +7152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.57, g: 1, b: 0.45, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7377,8 +7391,8 @@ MonoBehaviour:
   finishButton: {fileID: 597316962}
   backupPanel: {fileID: 680698784}
   shopPanel: {fileID: 1088908762}
-  tabActiveColor: {r: 1, g: 1, b: 1, a: 1}
-  tabInactiveColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+  tabActiveColor: {r: 0.57, g: 1, b: 0.45, a: 1}
+  tabInactiveColor: {r: 0.82, g: 0.82, b: 0.82, a: 1}
   cardPrefab: {fileID: 5582550320188999976, guid: ba3aa8cde9b69724b9f963111b8ce5ba, type: 3}
   cardContainer: {fileID: 1249392037}
   shopItemPrefab: {fileID: 5305602530876946435, guid: 18e2e9f1ddb0d894392082e7e870a1bd, type: 3}

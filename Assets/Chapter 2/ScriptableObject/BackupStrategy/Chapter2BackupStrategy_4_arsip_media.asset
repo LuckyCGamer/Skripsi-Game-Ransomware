@@ -21,29 +21,39 @@ MonoBehaviour:
   - label: Tidak Dicadangkan
     isBackup: 0
     storageMultiplier: 0
-    dataLossHours: 0
+    intervalHours: 0
     points: 0
     description: Berkas ini tidak dapat dipulihkan dari cadangan.
   - label: Setiap 4 Jam
     isBackup: 1
     storageMultiplier: 2
-    dataLossHours: 4
+    intervalHours: 4
     points: 25
     description: Data hilang lebih sedikit, storage lebih besar.
   - label: Setiap 24 Jam
     isBackup: 1
     storageMultiplier: 1
-    dataLossHours: 24
+    intervalHours: 24
     points: 10
     description: Storage lebih kecil, data hilang lebih banyak.
   storageOptions:
-  - label: Lokasi Sama
-    isOffsite: 0
+  - label: Terhubung
+    locations: 00000000i
     cost: 500000
     points: 5
-    description: Lebih murah, tetapi cadangan rawan ikut terenkripsi.
-  - label: Offsite
-    isOffsite: 1
-    cost: 1500000
+    description: Murah dan cepat, tetapi ransomware dapat menjangkaunya.
+  - label: Server Terpisah
+    locations: 01000000i
+    cost: 1000000
     points: 20
-    description: Lebih mahal, tetapi cadangan lebih aman.
+    description: Server dan kredensial sendiri. Ransomware menjangkaunya lebih lambat.
+  - label: Offline
+    locations: 02000000i
+    cost: 900000
+    points: 20
+    description: Terputus dari jaringan sehingga aman, tetapi pemulihan lebih lambat.
+  - label: Multi-copy
+    locations: 0100000002000000i
+    cost: 1700000
+    points: 20
+    description: Server terpisah ditambah salinan offline. Paling mahal dan paling tahan serangan.

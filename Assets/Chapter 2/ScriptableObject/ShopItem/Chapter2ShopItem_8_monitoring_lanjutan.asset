@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a979bee5fae1fa46b9848e323777f4f, type: 3}
+  m_Name: Chapter2ShopItem_8_monitoring_lanjutan
+  m_EditorClassIdentifier: Assembly-CSharp::Chapter2.Chapter2ShopItem
+  displayName: Monitoring Lanjutan
+  description: 'Pemantauan menyeluruh: serangan terdeteksi sekitar 6 menit setelah dimulai, sebelum sempat menyebar jauh.'
+  price: 2000000
+  icon: {fileID: 0}
+  iconText: SOC
+  effect: 4
+  storageGB: 0
+  detectMinutes: 6
+  restoreMultiplier: 0.7

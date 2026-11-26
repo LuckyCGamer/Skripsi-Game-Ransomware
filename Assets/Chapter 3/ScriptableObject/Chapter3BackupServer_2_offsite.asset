@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c8710678e4bebb4eb17e2cc3dffd678, type: 3}
   m_Name: Chapter3BackupServer_2_offsite
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3BackupServer
-  displayName: Server Cadangan Offsite
-  description: Berada di lokasi dan jaringan berbeda, sehingga tidak terjangkau serangan.
-  isOffsite: 1
+  displayName: Server Cadangan Terpisah
+  description: Server dan kredensial sendiri. Terjangkau ransomware lebih lambat, sekitar 100 menit setelah serangan.
+  location: 1
+  encryptMinute: 100
+  restoreExtraSeconds: 0

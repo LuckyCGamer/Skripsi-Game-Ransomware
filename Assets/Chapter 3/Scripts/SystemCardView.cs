@@ -31,11 +31,12 @@ namespace Chapter3
         {
             nameText.text = s.data.displayName;
             descriptionText.text = s.data.description;
-            symptomText.text = s.isInfected ? s.data.infectedSymptom : s.data.normalSymptom;
         }
 
         public void Refresh(SystemState s, bool revealInfection)
         {
+            // Gejala berubah saat ransomware menyebar ke sistem ini.
+            symptomText.text = s.isInfected ? s.data.infectedSymptom : s.data.normalSymptom;
             bool infected = false;
             if (s.outcome == Outcome.Restored) SetStatus(s.isolated ? "PULIH - TERISOLASI" : "PULIH", safeColor, darkTextColor);
             else if (s.outcome == Outcome.Failed) SetStatus("GAGAL DIPULIHKAN", infectedColor, Color.white);

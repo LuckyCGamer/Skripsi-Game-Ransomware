@@ -83,9 +83,8 @@ MonoBehaviour:
   statusText: {fileID: 1330504309718961542}
   verifyButton: {fileID: 4739991990332892651}
   restoreButton: {fileID: 1016077524284342651}
-  unknownColor: {r: 0.65, g: 0.65, b: 0.65, a: 1}
+  unknownColor: {r: 1, g: 0.85, b: 0.45, a: 1}
   greenColor: {r: 0.5, g: 0.95, b: 0.5, a: 1}
-  yellowColor: {r: 1, g: 0.85, b: 0.45, a: 1}
   redColor: {r: 1, g: 0.5, b: 0.5, a: 1}
 --- !u!1 &2201250251692613458
 GameObject:

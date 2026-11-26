@@ -46,10 +46,14 @@ namespace Chapter3
 
         [Header("Jendela Investigate Backup")]
         [SerializeField] GameObject backupWindow;
+        [Tooltip("Judul jendela: nama sistem yang cadangannya sedang dilihat")]
+        [SerializeField] TMP_Text backupWindowTitle;
         [SerializeField] Button investigateButton;
         [SerializeField] Button closeWindowButton;
         [SerializeField] BackupRowView backupRowPrefab;
         [SerializeField] Transform backupRowContainer;
+        [Tooltip("Teks yang tampil jika sistem tidak punya cadangan")]
+        [SerializeField] GameObject noBackupText;
 
         [Header("Informasi, popup & alur")]
         [SerializeField] TMP_Text logText;
@@ -66,22 +70,33 @@ namespace Chapter3
         readonly List<ActivityRowView> activityRows = new List<ActivityRowView>();
         readonly List<Image> staffBoxes = new List<Image>();
         Chapter3Game game;
+        SystemState selectedSystem;
         bool running;
 
         void Start()
         {
-            // Scene dibuka langsung tanpa Chapter 2: pakai cadangan lengkap supaya bisa dicoba.
+            // Scene dibuka langsung tanpa Chapter 2: semua sistem penting dicadangkan setiap 4 jam di server terpisah.
             bool standalone = GameSession.Chapter2Score < 0;
             var records = standalone
                 ? database.systems.Where(s => s && s.backupSource).Select(s => new GameSession.BackupRecord
-                    { fileName = s.backupSource.displayName, isBackedUp = true, dataLossHours = 4, isOffsite = true }).ToList()
+                    {
+                        fileName = s.backupSource.displayName, isBackedUp = s.backupSource.isImportant, intervalHours = 4,
+                        locations = new[] { Chapter2.BackupLocation.Separate }, storageLabel = "Server Terpisah",
+                    }).ToList()
                 : GameSession.Chapter2Backups;
+            var readiness = new Readiness
+            {
+                hasIncidentResponse = standalone || GameSession.Chapter2HasIncidentResponse,
+                hasTraining = !standalone && GameSession.Chapter2HasTraining,
+                detectMinutes = standalone ? -1 : GameSession.Chapter2DetectMinutes,
+                restoreMultiplier = standalone ? 1f : GameSession.Chapter2RestoreMultiplier,
+                money = standalone ? database.testMoney : GameSession.Chapter2MoneyLeft,
+            };
             int variation = forceVariation >= 0
                 ? Mathf.Clamp(forceVariation, 0, database.scenarios.Length - 1)
                 : GameSession.PickChapter3Variation(database.scenarios.Length);
             var scenario = database.scenarios[variation];
-            game = new Chapter3Game(database, scenario, records, standalone || GameSession.Chapter2HasIncidentResponse,
-                standalone ? database.testMoney : GameSession.Chapter2MoneyLeft);
+            game = new Chapter3Game(database, scenario, records, readiness, UnityEngine.Random.Range(1, int.MaxValue));
             game.Logged += AddLog;
 
             for (int i = 0; i < tabs.Length; i++)
@@ -90,15 +105,21 @@ namespace Chapter3
                 tabs[i].onClick.AddListener(() => ShowTab(index));
             }
             hireButton.onClick.AddListener(Hire);
-            investigateButton.onClick.AddListener(() => { game.Investigate(); Refresh(); });
+            investigateButton.onClick.AddListener(() => { if (selectedSystem != null) game.Investigate(selectedSystem); Refresh(); });
             closeWindowButton.onClick.AddListener(() => backupWindow.SetActive(false));
 
             BuildLists();
             backupWindow.SetActive(false);
             ShowTab(0);
-            if (standalone) AddLog("Mode uji: data Chapter 2 tidak ada, semua sistem dianggap dicadangkan setiap 4 jam secara offsite.");
+            if (standalone) AddLog("Mode uji: data Chapter 2 tidak ada. Sistem penting dicadangkan setiap 4 jam di server terpisah.");
+            game.Begin();
             Refresh();
-            popup.Show("Chapter 3 - Serangan Ransomware", scenario.attackDescription + "\n\n" + database.introduction, "Tangani Serangan", AskResponse);
+            var encrypted = game.Systems.Where(s => s.isInfected).Select(s => s.data.displayName);
+            popup.Show("Chapter 3 - Serangan Ransomware",
+                scenario.attackDescription +
+                $"\n\nSerangan dimulai pukul {Chapter3Game.Clock(game.AttackAbs)} dan baru terdeteksi <b>{game.DetectMinute} menit</b> kemudian. " +
+                $"Sudah terenkripsi: <b>{string.Join(", ", encrypted)}</b>.\n\n" + database.introduction,
+                "Tangani Serangan", AskResponse);
         }
 
         void Update()
@@ -118,7 +139,7 @@ namespace Chapter3
             {
                 var card = Instantiate(systemCardPrefab, systemContainer);
                 card.Show(s);
-                card.backupsButton.onClick.AddListener(() => backupWindow.SetActive(true));
+                card.backupsButton.onClick.AddListener(() => OpenBackups(s));
                 card.isolateButton.onClick.AddListener(() => { game.Isolate(s); Refresh(); });
                 card.reconnectButton.onClick.AddListener(() => { game.Reconnect(s); Refresh(); });
                 systemCards.Add(card);
@@ -134,13 +155,6 @@ namespace Chapter3
             }
 
             HideSamples(backupRowContainer);
-            foreach (var s in game.Systems)
-            {
-                var row = Instantiate(backupRowPrefab, backupRowContainer);
-                row.verifyButton.onClick.AddListener(() => { game.Verify(s); Refresh(); });
-                row.restoreButton.onClick.AddListener(() => AskRestore(s));
-                backupRows.Add(row);
-            }
 
             HideSamples(activityContainer);
             HideSamples(staffContainer);
@@ -159,7 +173,7 @@ namespace Chapter3
         {
             for (int i = 0; i < systemCards.Count; i++) systemCards[i].Refresh(game.Systems[i], game.ResponseActivated);
             for (int i = 0; i < serverCards.Count; i++) serverCards[i].Refresh(game.Servers[i]);
-            for (int i = 0; i < backupRows.Count; i++) backupRows[i].Refresh(game.Systems[i], game);
+            RefreshBackupRows();
 
             while (activityRows.Count < game.Activities.Count) activityRows.Add(Instantiate(activityRowPrefab, activityContainer));
             for (int i = 0; i < activityRows.Count; i++)
@@ -176,17 +190,49 @@ namespace Chapter3
             hireButton.interactable = game.ContractorAvailable;
             moneyText.text = "Sisa uang\n<b>" + Rupiah(game.Money) + "</b>";
 
-            int minutes = database.startHour * 60 + Mathf.FloorToInt(game.Minutes);
-            timeText.text = $"{minutes / 60 % 24:00}:{minutes % 60:00}";
+            timeText.text = Chapter3Game.Clock(game.AttackAbs + Mathf.FloorToInt(game.AttackMinutes));
             containmentImage.color = game.Contained ? containedColor : uncontainedColor;
             containmentText.text = game.Contained ? "Contained" : "Not Contained";
-            investigateButton.interactable = !game.Investigated && !game.Investigating;
         }
 
+        // Jendela Investigate Backup: riwayat cadangan satu sistem, terbaru di atas.
+        void OpenBackups(SystemState s)
+        {
+            selectedSystem = s;
+            backupWindow.SetActive(true);
+            Refresh();
+        }
+
+        void RefreshBackupRows()
+        {
+            if (selectedSystem == null || !backupWindow.activeSelf) return;
+            var s = selectedSystem;
+            if (backupWindowTitle)
+                backupWindowTitle.text = s.data.displayName + (s.HasBackup ? $"\n<size=75%>{s.record.storageLabel}, setiap {s.record.intervalHours} jam</size>" : "");
+            var entries = s.backups.AsEnumerable().Reverse().ToList();
+            while (backupRows.Count < entries.Count)
+            {
+                var row = Instantiate(backupRowPrefab, backupRowContainer);
+                row.verifyButton.onClick.AddListener(() => { game.Verify(selectedSystem, row.Entry); Refresh(); });
+                row.restoreButton.onClick.AddListener(() => AskRestore(selectedSystem, row.Entry));
+                backupRows.Add(row);
+            }
+            for (int i = 0; i < backupRows.Count; i++)
+            {
+                bool used = i < entries.Count;
+                backupRows[i].gameObject.SetActive(used);
+                if (used) backupRows[i].Refresh(entries[i], s, game);
+            }
+            noBackupText?.SetActive(entries.Count == 0);
+            investigateButton.interactable = !s.busy && entries.Count > 0;
+        }
+
+        // Pesan dari Chapter3Game sudah diberi jam; pesan lain diberi jam saat ini.
         void AddLog(string message)
         {
-            int minutes = database.startHour * 60 + Mathf.FloorToInt(game.Minutes);
-            log.Insert(0, $"[{minutes / 60 % 24:00}:{minutes % 60:00}] {message}"); // terbaru di atas
+            if (!message.StartsWith("["))
+                message = $"[{Chapter3Game.Clock(game.AttackAbs + Mathf.FloorToInt(game.AttackMinutes))}] {message}";
+            log.Insert(0, message); // terbaru di atas
             if (log.Count > MaxLogLines) log.RemoveAt(MaxLogLines);
             logText.text = string.Join("\n", log);
         }
@@ -234,18 +280,30 @@ namespace Chapter3
         }
 
         // ------------------------------------------------------------------ aksi 3 dan 4: pemulihan
-        void AskRestore(SystemState s)
+        void AskRestore(SystemState s, BackupEntry b)
         {
-            if (!s.isInfected)
+            switch (game.CanRestore(s, b))
             {
-                popup.Show("Tidak Perlu Dipulihkan", s.data.displayName + " tidak terinfeksi, sehingga datanya tidak perlu dipulihkan.", "Kembali", null);
-                return;
+                case RestoreCheck.NotNeeded:
+                    popup.Show("Tidak Perlu Dipulihkan", s.data.displayName + " tidak terinfeksi atau sudah selesai ditangani.", "Kembali", null);
+                    return;
+                case RestoreCheck.NotContained:
+                    popup.Show("Serangan Belum Terkendali",
+                        "Isolasi dulu semua sistem yang terinfeksi. Memulihkan data saat ransomware masih menyebar akan membuat data terenkripsi lagi.",
+                        "Kembali", null);
+                    return;
+                case RestoreCheck.Unusable:
+                case RestoreCheck.Busy:
+                    return;
             }
-            string body = $"Pulihkan {s.data.displayName} dari cadangan? Pemulihan hanya dapat dilakukan satu kali untuk setiap sistem.";
+            string body = $"Pulihkan {s.data.displayName} dari cadangan <b>{game.TimeLabel(b.minute)}</b>? " +
+                          $"Data setelah waktu itu hilang ({game.DataGapText(b)}). Lama pemulihan sekitar {Mathf.CeilToInt(game.RestoreSeconds(b))} detik.";
+            if (game.StateOf(b) == BackupState.Unknown)
+                body += "\n\n<b>Cadangan ini belum diverifikasi.</b> Jika ternyata rusak, pemulihan gagal dan waktu terbuang.";
             if (game.FirstRestored == null)
-                body += "\n\nIni adalah sistem yang kamu pulihkan <b>lebih dulu</b>. Isolasi sistem juga dinilai saat pemulihan pertama dimulai.";
+                body += "\n\nIni adalah sistem yang kamu pulihkan <b>lebih dulu</b>.";
             popup.Show("Restore Backup", body, "Batal", null,
-                new[] { new KeyValuePair<string, Action>("Ya, pulihkan", () => { game.Restore(s); Refresh(); }) });
+                new[] { new KeyValuePair<string, Action>("Ya, pulihkan", () => { game.Restore(s, b); Refresh(); }) });
         }
 
         // ------------------------------------------------------------------ hasil

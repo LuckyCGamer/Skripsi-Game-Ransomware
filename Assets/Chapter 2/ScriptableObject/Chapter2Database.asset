@@ -17,7 +17,7 @@ MonoBehaviour:
 
     Di <b>Backup Strategy</b>, tentukan berkas atau sistem penting yang dicadangkan, seberapa sering, dan di mana cadangannya disimpan.
 
-    Di <b>Shop</b>, tambah storage serta siapkan rencana Disaster Recovery (DR) dan Incident Response (IR).
+    Di <b>Shop</b>, tambah storage, siapkan rencana Disaster Recovery (DR) dan Incident Response (IR), serta perlengkapan yang membantu saat serangan terjadi.
 
 
     Tekan <b>Finish</b> jika persiapan sudah selesai. Keputusanmu menentukan pemulihan data saat serangan terjadi.'
@@ -34,3 +34,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 642191374954df746ad117bad8a26620, type: 2}
   - {fileID: 11400000, guid: 7915c3e0d06a6f245957f2606ca049fa, type: 2}
   - {fileID: 11400000, guid: e9584aeb3ca47ac4eb65ea02683961fe, type: 2}
+  - {fileID: 11400000, guid: 3e75fb143d599044da16a099cac0f955, type: 2}
+  - {fileID: 11400000, guid: 4b9442a24d81d0d40a8ae2ccb0749e9c, type: 2}
+  - {fileID: 11400000, guid: ff76632079c01f34780b63907ab243b4, type: 2}
+  - {fileID: 11400000, guid: 5724d791954791343b712b8bfc94a25a, type: 2}

@@ -1,3 +1,5 @@
+using System.Linq;
+using Chapter2;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,30 +17,34 @@ namespace Chapter3
         public Button restoreButton;
 
         [Header("Warna penanda")]
-        public Color unknownColor = new Color(0.65f, 0.65f, 0.65f);
+        public Color unknownColor = new Color(1f, 0.85f, 0.45f);
         public Color greenColor = new Color(0.5f, 0.95f, 0.5f);
-        public Color yellowColor = new Color(1f, 0.85f, 0.45f);
         public Color redColor = new Color(1f, 0.5f, 0.5f);
 
-        public void Refresh(SystemState s, Chapter3Game game)
-        {
-            bool known = game.Investigated || s.verified;
-            nameText.text = s.data.displayName;
-            frequencyText.text = !known ? "Belum diinvestigasi"
-                : !s.HasBackup ? "Tidak dicadangkan"
-                : $"Setiap {s.record.dataLossHours} jam, {(s.record.isOffsite ? "offsite" : "lokasi sama")}";
-            statusText.text =
-                s.outcome == Outcome.Restored ? "Sudah dipulihkan"
-                : s.outcome == Outcome.Failed ? "Pemulihan gagal"
-                : s.verified ? "Terverifikasi: " + game.HealthText(s)
-                : s.isInfected || !game.ResponseActivated ? "Belum diverifikasi" : "Tidak perlu dipulihkan";
+        public BackupEntry Entry { get; private set; }
 
-            // Hijau: offsite. Kuning: lokasi sama (rawan). Merah: tidak ada atau terenkripsi.
-            marker.color = !known ? unknownColor
-                : s.Health != BackupHealth.Good ? redColor
-                : s.record.isOffsite ? greenColor : yellowColor;
-            verifyButton.interactable = !s.busy;
-            restoreButton.interactable = !s.busy && s.outcome == Outcome.None;
+        /// <summary>Hijau: terverifikasi. Kuning: perlu diverifikasi. Merah: gagal, rusak, atau terenkripsi.</summary>
+        public void Refresh(BackupEntry entry, SystemState s, Chapter3Game game)
+        {
+            Entry = entry;
+            var state = game.StateOf(entry);
+            nameText.text = game.TimeLabel(entry.minute);
+            var location = game.UsableLocation(entry);
+            frequencyText.text = "Lokasi: " + string.Join(" + ", entry.locations.Select(LocationLabel)) +
+                                 (location == BackupLocation.Offline && entry.locations.Length > 1 ? " (tersisa offline)" : "");
+            statusText.text =
+                s.restoredFrom == entry ? "Dipakai untuk pemulihan"
+                : state == BackupState.Failed ? "Pekerjaan backup gagal"
+                : state == BackupState.Encrypted ? "Ikut terenkripsi"
+                : state == BackupState.Corrupt ? "Rusak"
+                : state == BackupState.Verified ? "Terverifikasi utuh"
+                : "Perlu diverifikasi";
+            marker.color = state == BackupState.Verified ? greenColor : state == BackupState.Unknown ? unknownColor : redColor;
+            verifyButton.interactable = !s.busy && state == BackupState.Unknown;
+            restoreButton.interactable = !s.busy && s.NeedsRestore && game.IsUsable(entry);
         }
+
+        public static string LocationLabel(BackupLocation l) =>
+            l == BackupLocation.Connected ? "terhubung" : l == BackupLocation.Separate ? "server terpisah" : "offline";
     }
 }

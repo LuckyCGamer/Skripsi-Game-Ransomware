@@ -14,6 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3Scenario
   attackDescription: 'Serangan ransomware terjadi di PT Maju Jaya! Peretas menyebar ke seluruh server utama: database pelanggan, sistem keuangan, dan server email menampilkan pesan tebusan.'
   infectedSystems:
-  - {fileID: 11400000, guid: a8bd7b9476a72c0458262fb6e60bfb1c, type: 2}
-  - {fileID: 11400000, guid: a9921ba8a2c66624f97bf0bae15dca61, type: 2}
   - {fileID: 11400000, guid: af1769436c12cb84a8e36840760ccab9, type: 2}
+  spread:
+  - system: {fileID: 11400000, guid: a8bd7b9476a72c0458262fb6e60bfb1c, type: 2}
+    minute: 25
+  - system: {fileID: 11400000, guid: a9921ba8a2c66624f97bf0bae15dca61, type: 2}
+    minute: 45
+  - system: {fileID: 11400000, guid: 7f4702fa470c9b444852e357c3704da0, type: 2}
+    minute: 80

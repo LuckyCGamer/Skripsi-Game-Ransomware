@@ -116,31 +116,39 @@ namespace Chapter2
         {
             var result = game.SetFrequency(choice, option, out int missingGB);
             Refresh();
-            if (result == FrequencyResult.NeedStorage)
+            ShowChoiceResult(choice, result, missingGB, choice.storage);
+        }
+
+        void ShowChoiceResult(BackupChoice choice, ChoiceResult result, int missingGB, StorageOption storage)
+        {
+            if (result == ChoiceResult.NeedStorage)
             {
                 popup.Show("Storage Tidak Cukup",
                     $"{choice.file.displayName} membutuhkan tambahan {missingGB} GB. Uangmu masih cukup untuk menambah storage.\n\n" +
-                    "Beli storage di Shop, lalu pilih kembali frekuensi pencadangan.",
+                    "Beli storage di Shop, lalu pilih kembali.",
                     "Batal", null,
                     new[] { new KeyValuePair<string, Action>("Buka Shop", () => ShowTab(true)) });
             }
-            else if (result == FrequencyResult.NoBudget)
+            else if (result == ChoiceResult.NoBudget)
             {
                 popup.Show("Anggaran Tidak Cukup",
                     $"{choice.file.displayName} membutuhkan tambahan {missingGB} GB, tetapi sisa uang tidak cukup untuk menambah storage. " +
                     $"Poin dikurangi {Chapter2Game.NoBudgetPenalty}.\n\nPilih kembali berkas atau sistem yang akan dicadangkan.",
                     "Kembali", null);
             }
+            else if (result == ChoiceResult.NoMoney && storage != null)
+            {
+                popup.Show("Uang Tidak Cukup",
+                    $"Biaya {storage.label} untuk {choice.file.displayName} adalah {Rupiah(storage.cost)}, sedangkan sisa uangmu {Rupiah(game.Money)}.",
+                    "Kembali", null);
+            }
         }
 
         void ChooseStorage(BackupChoice choice, StorageOption option)
         {
-            bool accepted = game.SetStorage(choice, option);
+            var result = game.SetStorage(choice, option, out int missingGB);
             Refresh();
-            if (!accepted)
-                popup.Show("Uang Tidak Cukup",
-                    $"Biaya {option.label} untuk {choice.file.displayName} adalah {Rupiah(option.cost)}, sedangkan sisa uangmu {Rupiah(game.Money)}.",
-                    "Kembali", null);
+            ShowChoiceResult(choice, result, missingGB, option);
         }
 
         // ------------------------------------------------------------------ Shop
@@ -185,6 +193,9 @@ namespace Chapter2
             GameSession.Chapter2Summary = summary;
             GameSession.Chapter2HasDisasterRecovery = game.HasDisasterRecovery;
             GameSession.Chapter2HasIncidentResponse = game.HasIncidentResponse;
+            GameSession.Chapter2HasTraining = game.HasTraining;
+            GameSession.Chapter2DetectMinutes = game.DetectMinutes;
+            GameSession.Chapter2RestoreMultiplier = game.RestoreMultiplier;
             GameSession.Chapter2MoneyLeft = game.Money;
             GameSession.Chapter2Backups.Clear();
             foreach (var c in game.Choices)
@@ -192,8 +203,9 @@ namespace Chapter2
                 {
                     fileName = c.file.displayName,
                     isBackedUp = c.IsBackedUp,
-                    dataLossHours = c.IsBackedUp ? c.frequency.dataLossHours : 0,
-                    isOffsite = c.IsBackedUp && c.storage.isOffsite,
+                    intervalHours = c.IsBackedUp ? c.frequency.intervalHours : 0,
+                    locations = c.IsBackedUp ? c.storage.locations : new BackupLocation[0],
+                    storageLabel = c.IsBackedUp ? c.storage.label : "",
                 });
 
             ShowSummary();

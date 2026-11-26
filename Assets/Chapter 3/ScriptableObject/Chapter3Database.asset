@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8678a7029b28e544c9033275ccc88410, type: 3}
   m_Name: Chapter3Database
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3Database
-  introduction: 'Isolasi sistem yang terinfeksi di tab <b>File</b>, lindungi server cadangan di tab <b>Backup Protection</b>, lalu pulihkan data melalui tombol <b>Backups</b>. Setiap tindakan memakai satu IT Staff dan dapat dipantau di tab <b>Activity</b>.
+  introduction: 'Ransomware terus menyebar ke sistem lain dan ke penyimpanan cadangan yang terhubung ke jaringan. Isolasi sistem yang terinfeksi di tab <b>File</b> dan lindungi cadangan di tab <b>Backup Protection</b>.
 
 
-    Cadangan di lokasi yang sama dapat ikut terenkripsi jika serangan tidak segera dikendalikan. Hasil pemulihan bergantung pada keputusanmu di Chapter 2.'
+    Setelah serangan terkendali, buka <b>Backups</b> pada sistem yang terinfeksi. Setiap sistem punya riwayat cadangan sesuai keputusanmu di Chapter 2. Sebagian pekerjaan backup bisa gagal atau rusak, jadi <b>verifikasi</b> cadangan sebelum memulihkan.'
   scenarios:
   - {fileID: 11400000, guid: 0a5034ec0cf24cc41b959c7b84343e7a, type: 2}
   - {fileID: 11400000, guid: 5e17897806ed5714d976b362b41354dd, type: 2}
@@ -41,10 +41,17 @@ MonoBehaviour:
   backupServers:
   - {fileID: 11400000, guid: 4c59da0337102b84aba7af884a95bd25, type: 2}
   - {fileID: 11400000, guid: 75f3bea0d63f30843b843ea648cf7716, type: 2}
-  startHour: 8
+  - {fileID: 11400000, guid: 7afb17695f9ecca4cba3bbf205f37976, type: 2}
+  startHour: 19
   minutesPerSecond: 1
-  localBackupEncryptMinutes: 120
+  detectMinutesWithoutMonitoring: 35
+  historyHours: 48
+  failRate: 0.07
+  corruptRate: 0.05
+  investigateCount: 10
   staffCount: 5
+  trainingSpeed: 0.8
+  trainingStaff: 1
   maxContractors: 2
   contractorCost: 1000000
   testMoney: 1500000

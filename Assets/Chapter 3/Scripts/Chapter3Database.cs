@@ -26,14 +26,29 @@ namespace Chapter3
         public Chapter3BackupServer[] backupServers = new Chapter3BackupServer[0];
 
         [Header("Waktu")]
-        [Range(0, 23)] public int startHour = 8;
+        [Tooltip("Jam serangan dimulai")]
+        [Range(0, 23)] public int startHour = 19;
         [Tooltip("Menit di dalam game untuk setiap detik nyata")]
         [Min(0)] public float minutesPerSecond = 1f;
-        [Tooltip("Menit sampai cadangan di lokasi yang sama ikut terenkripsi jika serangan belum terkendali")]
-        [Min(0)] public float localBackupEncryptMinutes = 120f;
+        [Tooltip("Menit sampai serangan terdeteksi jika tidak membeli monitoring pada Chapter 2")]
+        [Min(0)] public int detectMinutesWithoutMonitoring = 35;
+
+        [Header("Riwayat cadangan")]
+        [Tooltip("Rentang riwayat cadangan sebelum serangan, dalam jam")]
+        [Min(1)] public int historyHours = 48;
+        [Tooltip("Peluang satu pekerjaan backup gagal")]
+        [Range(0, 0.6f)] public float failRate = 0.07f;
+        [Tooltip("Peluang cadangan yang berhasil ternyata rusak (baru ketahuan saat diverifikasi)")]
+        [Range(0, 0.6f)] public float corruptRate = 0.05f;
+        [Tooltip("Jumlah cadangan terbaru yang diperiksa oleh Investigate Backup")]
+        [Min(1)] public int investigateCount = 10;
 
         [Header("IT Staff")]
         [Min(1)] public int staffCount = 5;
+        [Tooltip("Pengali lama aktivitas jika membeli pelatihan IR pada Chapter 2 (0,8 = 20% lebih cepat)")]
+        [Range(0.1f, 1f)] public float trainingSpeed = 0.8f;
+        [Tooltip("Tambahan IT Staff dari pelatihan IR")]
+        [Min(0)] public int trainingStaff = 1;
         [Min(0)] public int maxContractors = 2;
         [Tooltip("Biaya (rupiah) per kontraktor, dibayar dari sisa uang Chapter 2")]
         [Min(0)] public int contractorCost = 1000000;

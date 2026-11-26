@@ -31,7 +31,7 @@ namespace Chapter3
                 s.outcome == Outcome.Restored ? "Sudah dipulihkan"
                 : s.outcome == Outcome.Failed ? "Pemulihan gagal"
                 : s.verified ? "Terverifikasi: " + game.HealthText(s)
-                : s.data.isInfected || !game.ResponseActivated ? "Belum diverifikasi" : "Tidak perlu dipulihkan";
+                : s.isInfected || !game.ResponseActivated ? "Belum diverifikasi" : "Tidak perlu dipulihkan";
 
             // Hijau: offsite. Kuning: lokasi sama (rawan). Merah: tidak ada atau terenkripsi.
             marker.color = !known ? unknownColor

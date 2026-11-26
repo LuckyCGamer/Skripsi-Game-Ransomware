@@ -55,6 +55,8 @@ namespace Chapter3
         [SerializeField] TMP_Text logText;
         [SerializeField] UIPopup popup;
         [SerializeField] string nextSceneName = "UI_final_result";
+        [Tooltip("-1 = acak (berbeda dari permainan sebelumnya)")]
+        [SerializeField] int forceVariation = -1;
 
         const int MaxLogLines = 40;
         readonly List<string> log = new List<string>();
@@ -74,7 +76,11 @@ namespace Chapter3
                 ? database.systems.Where(s => s && s.backupSource).Select(s => new GameSession.BackupRecord
                     { fileName = s.backupSource.displayName, isBackedUp = true, dataLossHours = 4, isOffsite = true }).ToList()
                 : GameSession.Chapter2Backups;
-            game = new Chapter3Game(database, records, standalone || GameSession.Chapter2HasIncidentResponse,
+            int variation = forceVariation >= 0
+                ? Mathf.Clamp(forceVariation, 0, database.scenarios.Length - 1)
+                : GameSession.PickChapter3Variation(database.scenarios.Length);
+            var scenario = database.scenarios[variation];
+            game = new Chapter3Game(database, scenario, records, standalone || GameSession.Chapter2HasIncidentResponse,
                 standalone ? database.testMoney : GameSession.Chapter2MoneyLeft);
             game.Logged += AddLog;
 
@@ -92,7 +98,7 @@ namespace Chapter3
             ShowTab(0);
             if (standalone) AddLog("Mode uji: data Chapter 2 tidak ada, semua sistem dianggap dicadangkan setiap 4 jam secara offsite.");
             Refresh();
-            popup.Show("Chapter 3 - Serangan Ransomware", database.introduction, "Tangani Serangan", AskResponse);
+            popup.Show("Chapter 3 - Serangan Ransomware", scenario.attackDescription + "\n\n" + database.introduction, "Tangani Serangan", AskResponse);
         }
 
         void Update()
@@ -111,7 +117,7 @@ namespace Chapter3
             foreach (var s in game.Systems)
             {
                 var card = Instantiate(systemCardPrefab, systemContainer);
-                card.Show(s.data);
+                card.Show(s);
                 card.backupsButton.onClick.AddListener(() => backupWindow.SetActive(true));
                 card.isolateButton.onClick.AddListener(() => { game.Isolate(s); Refresh(); });
                 card.reconnectButton.onClick.AddListener(() => { game.Reconnect(s); Refresh(); });
@@ -230,7 +236,7 @@ namespace Chapter3
         // ------------------------------------------------------------------ aksi 3 dan 4: pemulihan
         void AskRestore(SystemState s)
         {
-            if (!s.data.isInfected)
+            if (!s.isInfected)
             {
                 popup.Show("Tidak Perlu Dipulihkan", s.data.displayName + " tidak terinfeksi, sehingga datanya tidak perlu dipulihkan.", "Kembali", null);
                 return;

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3System
   displayName: Sistem Keuangan
   description: Laporan keuangan, penggajian, dan faktur.
-  symptom: Aplikasi tidak dapat dibuka dan prosesor terus bekerja penuh.
+  infectedSymptom: Aplikasi tidak dapat dibuka dan prosesor terus bekerja penuh.
+  normalSymptom: Berjalan normal, semua berkas masih dapat dibuka.
   backupSource: {fileID: 11400000, guid: fa833499644abda49ac9dfcaae50c767, type: 2}
-  isInfected: 1
   priority: 2
   reason: pembayaran dan penggajian harus segera berjalan kembali.
   lossIfFailed: 30000000

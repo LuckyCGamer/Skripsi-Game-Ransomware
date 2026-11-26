@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8678a7029b28e544c9033275ccc88410, type: 3}
   m_Name: Chapter3Database
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3Database
-  introduction: 'Serangan ransomware terjadi di PT Maju Jaya! Beberapa sistem menampilkan pesan tebusan dan berkasnya terenkripsi.
-
-
-    Isolasi sistem yang terinfeksi di tab <b>File</b>, lindungi server cadangan di tab <b>Backup Protection</b>, lalu pulihkan data melalui tombol <b>Backups</b>. Setiap tindakan memakai satu IT Staff dan dapat dipantau di tab <b>Activity</b>.
+  introduction: 'Isolasi sistem yang terinfeksi di tab <b>File</b>, lindungi server cadangan di tab <b>Backup Protection</b>, lalu pulihkan data melalui tombol <b>Backups</b>. Setiap tindakan memakai satu IT Staff dan dapat dipantau di tab <b>Activity</b>.
 
 
     Cadangan di lokasi yang sama dapat ikut terenkripsi jika serangan tidak segera dikendalikan. Hasil pemulihan bergantung pada keputusanmu di Chapter 2.'
+  scenarios:
+  - {fileID: 11400000, guid: 0a5034ec0cf24cc41b959c7b84343e7a, type: 2}
+  - {fileID: 11400000, guid: 5e17897806ed5714d976b362b41354dd, type: 2}
+  - {fileID: 11400000, guid: 2d4ac2fb66fd492449b7f8e7b883ac79, type: 2}
   responseOptions:
   - label: Membayar tebusan agar data cepat kembali
     activatesIncidentResponse: 0
@@ -46,6 +47,7 @@ MonoBehaviour:
   staffCount: 5
   maxContractors: 2
   contractorCost: 1000000
+  testMoney: 1500000
   isolateSeconds: 4
   reconnectSeconds: 3
   investigateSeconds: 3

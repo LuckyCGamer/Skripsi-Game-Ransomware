@@ -16,10 +16,11 @@ namespace Chapter3
         public ServerState server;
         public bool isolated, busy, verified;
         public Outcome outcome;
+        public bool isInfected;
         public string failureReason;
 
         public bool HasBackup => record != null && record.isBackedUp;
-        public bool NeedsRestore => data.isInfected && outcome == Outcome.None;
+        public bool NeedsRestore => isInfected && outcome == Outcome.None;
         public BackupHealth Health =>
             !HasBackup ? BackupHealth.Missing
             : server != null && server.encrypted ? BackupHealth.Encrypted : BackupHealth.Good;
@@ -74,13 +75,13 @@ namespace Chapter3
         public int StaffFree => StaffTotal - Activities.Count;
         public bool ContractorAvailable => Contractors < database.maxContractors;
         public bool CanHire => ContractorAvailable && Money >= database.contractorCost;
-        public bool Contained => Systems.All(s => !s.data.isInfected || s.isolated || s.outcome == Outcome.Restored);
+        public bool Contained => Systems.All(s => !s.isInfected || s.isolated || s.outcome == Outcome.Restored);
         public bool Finished => Systems.All(s => !s.NeedsRestore);
-        public bool Recovered => Systems.All(s => !s.data.isInfected || s.outcome == Outcome.Restored);
+        public bool Recovered => Systems.All(s => !s.isInfected || s.outcome == Outcome.Restored);
         public int ContractorCost => Contractors * database.contractorCost;
         public int Money => startingMoney - ContractorCost;
 
-        public Chapter3Game(Chapter3Database database, IList<GameSession.BackupRecord> records, bool hasIncidentResponse, int money)
+        public Chapter3Game(Chapter3Database database, Chapter3Scenario scenario, IList<GameSession.BackupRecord> records, bool hasIncidentResponse, int money)
         {
             this.database = database;
             this.hasIncidentResponse = hasIncidentResponse;
@@ -94,6 +95,7 @@ namespace Chapter3
                 Systems.Add(new SystemState
                 {
                     data = d,
+                    isInfected = scenario.infectedSystems.Contains(d),
                     record = record,
                     server = record == null ? null : Servers.FirstOrDefault(s => s.data.isOffsite == record.isOffsite),
                 });
@@ -216,7 +218,7 @@ namespace Chapter3
             if (!s.NeedsRestore || s.busy) return;
             var usable = Systems.Where(x => x.NeedsRestore && x.Health == BackupHealth.Good).ToList();
             var candidates = usable.Count > 0 ? usable : Systems.Where(x => x.NeedsRestore).ToList();
-            bool correct = Systems.All(x => x.isolated == x.data.isInfected);
+            bool correct = Systems.All(x => x.isolated == x.isInfected);
 
             s.busy = StartActivity("Pemulihan " + s.data.displayName, database.restoreSeconds, () => CompleteRestore(s));
             if (!s.busy || FirstRestored != null) return;
@@ -280,7 +282,7 @@ namespace Chapter3
             s.Append($"2. Isolasi sistem terinfeksi: {isolation}/{IsolationPoints}\n");
             if (!isolationCorrect)
                 s.Append("   - Sebelum pemulihan dimulai, seluruh sistem terinfeksi (dan hanya itu) harus terisolasi: " +
-                         string.Join(", ", Systems.Where(x => x.data.isInfected).Select(x => x.data.displayName)) + ".\n");
+                         string.Join(", ", Systems.Where(x => x.isInfected).Select(x => x.data.displayName)) + ".\n");
 
             int priority = FirstRestored != null && FirstRestored.data.priority == expectedFirst.data.priority ? PriorityPoints : 0;
             s.Append($"3. Sistem yang dipulihkan lebih dulu: {priority}/{PriorityPoints}\n");
@@ -289,7 +291,7 @@ namespace Chapter3
                          (priority > 0 ? "\n" : $" Seharusnya {expectedFirst.data.displayName}: {expectedFirst.data.reason}\n"));
 
             s.Append($"4. Pulihkan data dari cadangan: {RestorePoints}/{RestorePoints}\n");
-            foreach (var x in Systems.Where(x => x.data.isInfected))
+            foreach (var x in Systems.Where(x => x.isInfected))
                 s.Append($"   - {x.data.displayName}: " + (x.outcome == Outcome.Restored
                     ? $"berhasil, data hilang maks. {x.record.dataLossHours} jam.\n"
                     : $"gagal, {x.failureReason}.\n"));

@@ -27,11 +27,11 @@ namespace Chapter3
         public Color safeColor = new Color(0.5f, 0.9f, 0.5f);
         public Color darkTextColor = new Color(0.196f, 0.196f, 0.196f);
 
-        public void Show(Chapter3System data)
+        public void Show(SystemState s)
         {
-            nameText.text = data.displayName;
-            descriptionText.text = data.description;
-            symptomText.text = data.symptom;
+            nameText.text = s.data.displayName;
+            descriptionText.text = s.data.description;
+            symptomText.text = s.isInfected ? s.data.infectedSymptom : s.data.normalSymptom;
         }
 
         public void Refresh(SystemState s, bool revealInfection)
@@ -41,7 +41,7 @@ namespace Chapter3
             else if (s.outcome == Outcome.Failed) SetStatus("GAGAL DIPULIHKAN", infectedColor, Color.white);
             else if (s.isolated) SetStatus("TERISOLASI", isolatedColor, darkTextColor);
             else if (!revealInfection) SetStatus("TERHUBUNG", neutralColor, darkTextColor);
-            else if (s.data.isInfected)
+            else if (s.isInfected)
             {
                 infected = true;
                 SetStatus("TERINFEKSI", infectedColor, Color.white);

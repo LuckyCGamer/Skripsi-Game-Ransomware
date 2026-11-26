@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3System
   displayName: Arsip Media Promosi
   description: Foto dan video promosi lama.
-  symptom: Berjalan normal, semua berkas masih dapat dibuka.
+  infectedSymptom: Foto dan video tidak dapat dibuka, nama berkas berubah menjadi .locked.
+  normalSymptom: Berjalan normal, semua berkas masih dapat dibuka.
   backupSource: {fileID: 11400000, guid: bbb631b2230632a4490c7d8365aa3468, type: 2}
-  isInfected: 0
   priority: 4
   reason: tidak dibutuhkan untuk operasional.
   lossIfFailed: 5000000

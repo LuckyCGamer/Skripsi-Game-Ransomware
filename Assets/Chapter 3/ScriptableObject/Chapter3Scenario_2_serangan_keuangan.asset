@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0430469b0227a7a4bbead28939155443, type: 3}
+  m_Name: Chapter3Scenario_2_serangan_keuangan
+  m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3Scenario
+  attackDescription: Serangan ransomware terjadi di PT Maju Jaya! Menjelang tanggal gajian, sistem keuangan berhenti bekerja dan pesan tebusan mulai muncul di server email.
+  infectedSystems:
+  - {fileID: 11400000, guid: a9921ba8a2c66624f97bf0bae15dca61, type: 2}
+  - {fileID: 11400000, guid: af1769436c12cb84a8e36840760ccab9, type: 2}

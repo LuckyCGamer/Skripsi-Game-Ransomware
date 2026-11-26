@@ -7,6 +7,7 @@ using UnityEngine;
 public static class GameSession
 {
     const string LastChapter1VariationKey = "chapter1_last_variation";
+    const string LastChapter3VariationKey = "chapter3_last_variation";
 
     public static int Chapter1Score = -1;
     public static string Chapter1Summary = "";
@@ -30,6 +31,7 @@ public static class GameSession
     public static readonly List<BackupRecord> Chapter2Backups = new List<BackupRecord>();
 
     public static int Chapter3Score = -1;
+    public static int Chapter3Variation = -1;
     public static string Chapter3Summary = "";
 
     /// <summary>Skor total ketiga chapter (maks. 300). Chapter yang belum dimainkan dihitung 0.</summary>
@@ -41,22 +43,26 @@ public static class GameSession
     {
         Chapter1Score = Chapter2Score = Chapter3Score = -1;
         Chapter1Summary = Chapter2Summary = Chapter3Summary = "";
-        Chapter1Variation = -1;
+        Chapter1Variation = Chapter3Variation = -1;
         Chapter2HasDisasterRecovery = Chapter2HasIncidentResponse = false;
         Chapter2MoneyLeft = 0;
         Chapter2Backups.Clear();
     }
 
     /// <summary>Pilih variasi acak yang berbeda dari variasi permainan sebelumnya.</summary>
-    public static int PickChapter1Variation(int count)
+    public static int PickChapter1Variation(int count) => Chapter1Variation = PickVariation(LastChapter1VariationKey, count);
+
+    /// <summary>Pilih variasi acak Chapter 3 yang berbeda dari variasi permainan sebelumnya.</summary>
+    public static int PickChapter3Variation(int count) => Chapter3Variation = PickVariation(LastChapter3VariationKey, count);
+
+    static int PickVariation(string key, int count)
     {
-        int last = PlayerPrefs.GetInt(LastChapter1VariationKey, -1);
+        int last = PlayerPrefs.GetInt(key, -1);
         int pick = Random.Range(0, count);
         if (count > 1 && pick == last)
             pick = (pick + 1 + Random.Range(0, count - 1)) % count;
-        PlayerPrefs.SetInt(LastChapter1VariationKey, pick);
+        PlayerPrefs.SetInt(key, pick);
         PlayerPrefs.Save();
-        Chapter1Variation = pick;
         return pick;
     }
 }

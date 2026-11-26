@@ -17,8 +17,10 @@ namespace Chapter3
     [CreateAssetMenu(fileName = "Chapter3Database", menuName = "Chapter 3/Database")]
     public class Chapter3Database : ScriptableObject
     {
-        [Tooltip("Kejadian serangan yang ditampilkan di awal chapter")]
+        [Tooltip("Petunjuk umum, ditampilkan di awal chapter setelah kejadian serangan dari variasi")]
         [TextArea(4, 10)] public string introduction;
+        [Tooltip("Variasi serangan; satu dipilih acak setiap permainan baru")]
+        public Chapter3Scenario[] scenarios = new Chapter3Scenario[0];
         public ResponseOption[] responseOptions = new ResponseOption[0];
         public Chapter3System[] systems = new Chapter3System[0];
         public Chapter3BackupServer[] backupServers = new Chapter3BackupServer[0];

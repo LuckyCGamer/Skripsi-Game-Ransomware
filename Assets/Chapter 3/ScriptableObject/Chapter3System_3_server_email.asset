@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3System
   displayName: Server Email
   description: Arsip email karyawan dan perusahaan.
-  symptom: Arsip email terenkripsi dan karyawan tidak dapat masuk.
+  infectedSymptom: Arsip email terenkripsi dan karyawan tidak dapat masuk.
+  normalSymptom: Berjalan normal, semua berkas masih dapat dibuka.
   backupSource: {fileID: 11400000, guid: 1ef70abce56da2742ab1b8b156e1818d, type: 2}
-  isInfected: 1
   priority: 3
   reason: komunikasi dibutuhkan, tetapi masih ada saluran lain.
   lossIfFailed: 15000000

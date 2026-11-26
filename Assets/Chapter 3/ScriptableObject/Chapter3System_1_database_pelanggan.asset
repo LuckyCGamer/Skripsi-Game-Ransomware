@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Chapter3.Chapter3System
   displayName: Database Pelanggan
   description: Data pelanggan dan riwayat transaksi perusahaan.
-  symptom: Berkas berubah menjadi .locked dan muncul pesan tebusan.
+  infectedSymptom: Berkas berubah menjadi .locked dan muncul pesan tebusan.
+  normalSymptom: Berjalan normal, semua berkas masih dapat dibuka.
   backupSource: {fileID: 11400000, guid: 8e94b041db7c0284cad51ae3040b6617, type: 2}
-  isInfected: 1
   priority: 1
   reason: seluruh layanan pelanggan bergantung pada sistem ini.
   lossIfFailed: 50000000
